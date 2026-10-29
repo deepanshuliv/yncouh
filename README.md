@@ -6,7 +6,7 @@ it with **what wind really generated**, and measures how far that forecast can b
 trusted. It covers purchase decisions made in **January 2026**, using Elexon BMRS
 data only.
 
-**Live app:** _add the Heroku URL here after deploying (see [Deploy](#deploy-to-heroku))_
+**Live app:** https://yncouh.vercel.app
 
 ![Dashboard](docs/dashboard.png)
 
@@ -86,9 +86,22 @@ python -m scripts.fetch_data            # re-download from Elexon into backend/d
 python -m scripts.compare_approaches    # benchmark selection + alignment approaches
 ```
 
-## Deploy to Heroku
+## Deploy
 
-The app ships as one Docker image (FastAPI serves the API and the built React
+### Vercel (live)
+
+Vercel builds the React app as static files and runs the FastAPI app as a
+Python serverless function (`api/index.py`). `vercel.json` routes `/api/*` to
+it and bundles the cached data with the function.
+
+```bash
+npx vercel link            # once, to connect the folder to a Vercel project
+npx vercel deploy --prod
+```
+
+### Heroku (Docker)
+
+The app also ships as one Docker image (FastAPI serves the API and the built React
 app). It deploys with Heroku's container stack:
 
 ```bash
@@ -121,6 +134,10 @@ Interactive docs: `http://localhost:8000/docs`.
 ├── Dockerfile                 # Multi-stage: build React, then Python image serving API + static files
 ├── docker-compose.yml         # One-command local run
 ├── heroku.yml                 # Heroku container-stack build config
+├── vercel.json                # Vercel: frontend build, /api rewrite, function bundle
+├── api/index.py               # Vercel serverless entry point (wraps the FastAPI app)
+├── requirements.txt           # Python dependencies for the Vercel function
+├── .python-version            # Python version for Vercel
 ├── .github/workflows/ci.yml   # CI: backend tests, frontend lint/build, Docker build
 ├── docs/
 │   ├── decisions.md           # Design decisions, research and evidence

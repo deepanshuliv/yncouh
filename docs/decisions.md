@@ -133,5 +133,8 @@ different run times and are not comparable, so the chart stops at 45 h.
   input, caches per cutoff (`lru_cache`) and shapes JSON.
 - **One container.** FastAPI serves both `/api/*` and the built React app, so
   there is one image and one URL and no CORS configuration.
-- **Deployment: Heroku container stack** (`heroku.yml`). Vercel does not run
-  Docker images, and pandas strains its Python function size limits.
+- **Two deployment targets, same code.** Vercel (live) does not run Docker, so it
+  serves the React build as static files and runs the unchanged FastAPI app as a
+  Python function (`api/index.py`); data is bundled with the function, so cold
+  starts need no network. The Docker image (local runs, Heroku via `heroku.yml`)
+  serves both from one container.
