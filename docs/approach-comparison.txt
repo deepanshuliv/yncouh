@@ -1,0 +1,24 @@
+Forecast rows (after half-hour alignment): 40,600
+
+== Forecast selection (cutoff 09:20 UK on D-1) ==
+approach        time (ms)  matches ref  leaks future  MAE (MW)
+naive_latest          0.8        False         1,734      1652
+python_loop          42.1         True             0      2023
+filter_sort           3.5         True             0      2023
+merge_asof            2.3         True             0      2023
+
+== Hourly -> half-hourly alignment (filter_sort, cutoff 09:20) ==
+Only :30 slots differ between methods, so they are scored on those alone.
+method      slots     MAE    RMSE    bias  err std
+hourly          0   (no :30 values - half the slots go unscored)
+hold          744    2061    2521    1750     1814
+linear        744    2024    2499    1743     1791
+
+== Sensitivity to the decision cutoff (linear, filter_sort) ==
+cutoff  run used (UTC)       MAE    bias  err std
+07:00   04:30               2005    1667     1888
+09:00   07:30               2023    1744     1788
+09:20   07:30               2023    1744     1788
+09:50   09:30               1996    1727     1807
+11:00   09:30               1996    1727     1807
+12:00   09:30, 11:30        1883    1684     1639
